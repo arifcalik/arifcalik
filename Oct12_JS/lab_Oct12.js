@@ -3,6 +3,7 @@ function sleepIn(weekday, vacation) {
         return true;
     return false;
 }
+
 console.assert(sleepIn(false, false) == true)
 console.assert(sleepIn(true, false) == false)
 console.assert(sleepIn(false, true) == true)
@@ -13,6 +14,7 @@ function monkeyTrouble(aSmile, bSmile) {
     }
     return false;
 }
+
 console.assert(monkeyTrouble(true, true) == true)
 console.assert(monkeyTrouble(false, false) == true)
 console.assert(monkeyTrouble(true, false) == false)
@@ -25,6 +27,7 @@ function stringTimes(str, n) {
         res += str;
     return res;
 }
+
 console.assert(stringTimes("Hi", 2) == "HiHi")
 console.assert(stringTimes("Hi", 3) == "HiHiHi")
 console.assert(stringTimes("Hi", 1) == "Hi")
@@ -46,6 +49,7 @@ function luckySum(a, b, c){
     else return sum;
     return sum;
 }
+
 console.assert(luckySum(1, 2, 3) == 6)
 console.assert(luckySum(1, 2, 13) == 3)
 console.assert(luckySum(1, 13, 3) == 1)
@@ -60,6 +64,7 @@ function caught_speeding(speed, is_birthday){
     else    
         return 2;
 }
+
 console.assert(caught_speeding(60, false) == 0)
 console.assert(caught_speeding(65, false) == 1)
 console.assert(caught_speeding(65, true) == 0)
