@@ -1,0 +1,1 @@
+This repo is for lexicon labs for educational purposes.
