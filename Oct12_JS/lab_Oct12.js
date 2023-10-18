@@ -13,7 +13,6 @@ function monkeyTrouble(aSmile, bSmile) {
     }
     return false;
 }
-
 console.assert(monkeyTrouble(true, true) == true)
 console.assert(monkeyTrouble(false, false) == true)
 console.assert(monkeyTrouble(true, false) == false)
@@ -26,13 +25,11 @@ function stringTimes(str, n) {
         res += str;
     return res;
 }
-
 console.assert(stringTimes("Hi", 2) == "HiHi")
 console.assert(stringTimes("Hi", 3) == "HiHiHi")
 console.assert(stringTimes("Hi", 1) == "Hi")
 console.assert(stringTimes("ab cd", 2) == "ab cdab cd")
 console.assert(stringTimes("a", 0) == "")
-
 
 function luckySum(a, b, c){
     const UNLUCKY = 13;
@@ -49,13 +46,11 @@ function luckySum(a, b, c){
     else return sum;
     return sum;
 }
-
 console.assert(luckySum(1, 2, 3) == 6)
 console.assert(luckySum(1, 2, 13) == 3)
 console.assert(luckySum(1, 13, 3) == 1)
 console.assert(luckySum(13, 103, 3) == 0)
 console.assert(luckySum(-1, -7, 3) == -5)
-
 
 function caught_speeding(speed, is_birthday){
     if((is_birthday && speed <= 65) || speed <= 60)
@@ -65,8 +60,6 @@ function caught_speeding(speed, is_birthday){
     else    
         return 2;
 }
-
-
 console.assert(caught_speeding(60, false) == 0)
 console.assert(caught_speeding(65, false) == 1)
 console.assert(caught_speeding(65, true) == 0)
