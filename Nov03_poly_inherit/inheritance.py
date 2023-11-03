@@ -4,15 +4,21 @@ class Vehicle :
         self._make = make
         self._model = model
         self._year = year
+        self._start = False
     
     def __str__(self):
-        pass
+        print("I am a virtual vehicle!")
 
     def start(self):
         print("Starting...")
+        self._start = True
 
     def stop(self):
         print("Stopping...")
+        self._start = False
+
+    def getStatus(self):
+        return self._start == True
 
 class Car(Vehicle):
 
@@ -27,7 +33,7 @@ class Car(Vehicle):
         print("Honking the horn with champions style!")
 
     def fuel_up(self):
-        print("I m fueling the depo!")        
+        print("I m fueling the depo!")
 
 class Bicycle(Vehicle):
 
@@ -66,10 +72,12 @@ def main():
     print(car2)
     print(bike)
     print(moto)
+    car1.start()
     car1.fuel_up()
     car2.honk_horn()
     bike.ring_bell()
     moto.park()
+    print(f"Statuses are {car1.getStatus()} {car2.getStatus()} {bike.getStatus()} {moto.getStatus()}")
 
 if __name__ == '__main__':
     main()

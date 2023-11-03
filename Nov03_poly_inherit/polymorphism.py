@@ -67,7 +67,6 @@ def main():
     rectangle = Rectangle("Yellow", 2, 3)
     triangle = Triangle("Green", 5, 13, 12)    
 
-
     print(circle)
     print(f"My area is {circle.area():.2f} cm-square and my perimeter is {circle.perimeter():.2f} cm")
     print(rectangle)
