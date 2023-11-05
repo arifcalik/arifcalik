@@ -32,6 +32,9 @@ class Deck:
             split = (self._cards[division * per_player : division * per_player + per_player])
             self._splits.append(split)
         return self._splits
+
+    def remainingCardNumbers(self, split = 0):
+        return len(self._splits[split])
     
     def display_splits(self):
         for index, split in enumerate(self._splits):
@@ -50,7 +53,7 @@ class Deck:
             print(index, end =': ')
             card.display()
 
-    def get_cards_from_split(self, split , numcards = 3):
+    def get_cards_from_split(self, split , numcards = 2):
         '''
         Think split array as a queue and take from beginning and add to the end!
         Take 2: one downfront first and then one upfront(peace case)
@@ -65,7 +68,7 @@ class Deck:
         for i in range(numcards):
             chosenSplit[i].display()
         #dont forget removing it from split
-        self._splits[split] = self._splits[split][3:]
+        self._splits[split] = self._splits[split][numcards:]
         return chosenCards
 
     def add_cards_to_winners_split(self, winner, cardsWon):

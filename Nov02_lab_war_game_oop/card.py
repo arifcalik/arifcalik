@@ -2,6 +2,7 @@ from termcolor import colored
 #why is this functional just in vscode debug run?
 
 class Card:
+    #remove those duplicates later
     _RANKS = ["A", "K", "Q", "J", "10", "9", "8", "7", "6", "5", "4", "3", "2"]
     _NUMRANKS = 13
 

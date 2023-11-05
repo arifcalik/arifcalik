@@ -1,8 +1,8 @@
 class Player:
     '''
-    A player will sure have a hand object and most
-    probably her/his/its own split too.
+    A player will sure have a hand object but
+    not sure about decks split!
     '''
-    def __init__(self):
-        pass
+    def __init__(self, name):
+        self._name = name
 
