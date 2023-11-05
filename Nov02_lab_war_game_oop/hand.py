@@ -15,11 +15,21 @@ class Hand:
     '''
     from card import Card
 
-    def __init__(self, player=0):   #0:computer 1:player
-        self._cards = []
+    def __init__(self, cards):   #0:computer 1:player
+        self._cards = cards
+        self._upfrontCard = cards[-1]
+        #any need for revealing downfront? for now big NO as in poker
         '''
         first indices are always downfront cards as in poker
+        last card is upfront one!
         '''
-    
+
     def display(self):
-        print(f"{self._rank:2}:{self._suit}", end=" ")
+            print("Upfront card: ")
+            #self._cards[-1].display()
+            self._upfrontCard.display()
+            print("Downfront card(s): ")
+            for i, c in enumerate(self._cards):
+                 if i != len(self._cards) - 1:
+                    c.display()
+                            

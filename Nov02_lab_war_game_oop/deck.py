@@ -60,10 +60,11 @@ class Deck:
             chosenSplit = self._splits[split]    #assumes 2players/extend for more players
         else:   #players split
             chosenSplit = self._splits[split]
-
+        chosenCards = chosenSplit[:numcards]
         print(f"\nCards chosen #{split}***********************")
         for i in range(numcards):
             chosenSplit[i].display()
         #dont forget removing it from split
         self._splits[split] = self._splits[split][3:]
+        return chosenCards
 
