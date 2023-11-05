@@ -11,7 +11,7 @@ class Deck:
 
     def __init__(self):
         self._cards = []
-        self._splits = []
+        self._splits = []   #first split belongs to computer and followings are for players
         for suit in self._SUITS:
             for rank in self._RANKS:
                 self._cards.append(Card(suit, rank))
@@ -21,22 +21,49 @@ class Deck:
         for i, card in enumerate(self._cards):
             print(i, end =': ')
             card.display()
-        print("\n...............DECK...............")
 
     def shuffle(self):
         random.shuffle(self._cards)
         #self.display()
 
-    def split(self, players=3):
+    def split(self, players = 2):
         per_player = len(self._SUITS) * len(self._RANKS) // players
         for division in range(players):
-            self._splits.append(self._cards[division * per_player : division * per_player + per_player])
-        #return self._splits
+            split = (self._cards[division * per_player : division * per_player + per_player])
+            self._splits.append(split)
+        return self._splits
     
     def display_splits(self):
-        for index, _split in enumerate(self._splits):
-            print(f"Split #{index}-----------------------\n")
-            for i, card in enumerate(_split):
+        for index, split in enumerate(self._splits):
+            print(f"\nSplit #{index}-----------------------")
+            for i, card in enumerate(split):
                 print(i, end =': ')
-                card.display()  
-            print(f"\nSplit #{index}-----------------------\n")          
+                card.display()
+
+    def display_split(self, split):     #0 : computer 1:player
+        if not split:   #computers split
+            chosenSplit = self._splits[0]    #assumes 2players/extend for more players
+        else:   #players split
+            chosenSplit = self._splits[1]
+        print(f"\nSplit #{split}-----------------------")
+        for index, card in enumerate(chosenSplit):
+            print(index, end =': ')
+            card.display()
+
+    def get_cards_from_split(self, split , numcards = 3):
+        '''
+        Think split array as a queue and take from beginning and add to the end!
+        Take 2: one downfront first and then one upfront(peace case)
+        Take 3: two downfront first and then one upfront(war case)
+        '''
+        if not split:   #computers split
+            chosenSplit = self._splits[split]    #assumes 2players/extend for more players
+        else:   #players split
+            chosenSplit = self._splits[split]
+
+        print(f"\nCards chosen #{split}***********************")
+        for i in range(numcards):
+            chosenSplit[i].display()
+        #dont forget removing it from split
+        self._splits[split] = self._splits[split][3:]
+
