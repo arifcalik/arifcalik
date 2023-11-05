@@ -17,12 +17,17 @@ class Hand:
 
     def __init__(self, cards):   #0:computer 1:player
         self._cards = cards
-        self._upfrontCard = cards[-1]
+        self._upfrontCard = self._cards[-1]
         #any need for revealing downfront? for now big NO as in poker
         '''
         first indices are always downfront cards as in poker
         last card is upfront one!
         '''
+    def getUpfrontCardRank(self):   #no need for suit
+         return self._upfrontCard.getRank()
+
+    def getCards(self):
+        return self._cards
 
     def display(self):
             print("Upfront card: ")

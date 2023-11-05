@@ -12,8 +12,8 @@ class Deck:
     def __init__(self):
         self._cards = []
         self._splits = []   #first split belongs to computer and followings are for players
-        for suit in self._SUITS:
-            for rank in self._RANKS:
+        for suit in Deck._SUITS:
+            for rank in Deck._RANKS:
                 self._cards.append(Card(suit, rank))
 
     def display(self):
@@ -68,3 +68,14 @@ class Deck:
         self._splits[split] = self._splits[split][3:]
         return chosenCards
 
+    def add_cards_to_winners_split(self, winner, cardsWon):
+        '''
+        before adding cards that has been won to the winners split
+        shuffle it!
+        '''
+        if not winner:   #computers split
+            chosenSplit = self._splits[winner]    #assumes 2players/extend for more players
+        else:   #players split
+            chosenSplit = self._splits[winner]
+        random.shuffle(cardsWon)
+        self._splits[winner].extend(cardsWon)

@@ -31,6 +31,23 @@ def game():
     handPlayer = Hand(handCardsPlayer)
     handPlayer.display()
 
+    print("Computer has " + str(handComputer.getUpfrontCardRank()))
+    print("VERSUS")
+    print("Player has " + str(handPlayer.getUpfrontCardRank()))
+
+    cardsWon = handComputer.getCards() + handPlayer.getCards()
+
+    if handComputer.getUpfrontCardRank() > handPlayer.getUpfrontCardRank():
+        print("Computer wins!!!")
+        deck.add_cards_to_winners_split(COMPUTER, cardsWon)
+        deck.display_split(COMPUTER)
+    elif(handComputer.getUpfrontCardRank() < handPlayer.getUpfrontCardRank()):
+        print("Player wins!!!")
+        deck.add_cards_to_winners_split(PLAYER, cardsWon)
+        deck.display_split(PLAYER)
+    else:
+        print("This is WAR!!!!")
+
 def main():
     game()
 
