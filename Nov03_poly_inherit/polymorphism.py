@@ -1,6 +1,5 @@
 import math
 class Shape:
-
     def __init__(self, color):
         self._color = color
     
@@ -13,8 +12,8 @@ class Shape:
     def __str__(self):
         return f"I m just a {self.color} shape!"
 
-class Circle(Shape):
 
+class Circle(Shape):
     def __init__(self, color, radius=0):
         super().__init__(color)
         self._radius = radius
@@ -28,8 +27,8 @@ class Circle(Shape):
     def perimeter(self):
         return 2 * math.pi * self._radius
 
-class Rectangle(Shape):
 
+class Rectangle(Shape):
     def __init__(self, color, width, length):
         super().__init__(color)
         self._width = width
@@ -44,8 +43,8 @@ class Rectangle(Shape):
     def perimeter(self):
         return 2 * (self._width + self._length)
 
-class Triangle(Shape):
 
+class Triangle(Shape):
     def __init__(self, color, a, b, c):
         super().__init__(color)
         self._a = a
@@ -62,17 +61,20 @@ class Triangle(Shape):
     def perimeter(self):
         return self._a + self._b + self._c
 
+
 def main():
     circle = Circle("Red", 4)
     rectangle = Rectangle("Yellow", 2, 3)
-    triangle = Triangle("Green", 5, 13, 12)    
+    triangle = Triangle("Green", 5, 13, 12) 
 
-    print(circle)
-    print(f"My area is {circle.area():.2f} cm-square and my perimeter is {circle.perimeter():.2f} cm")
-    print(rectangle)
-    print(f"My area is {rectangle.area():.2f} cm-square and my perimeter is {rectangle.perimeter():.2f} cm")    
-    print(triangle)
-    print(f"My area is {triangle.area():.2f} cm-square and my perimeter is {triangle.perimeter():.2f} cm")    
+    shapes = [circle, rectangle, triangle]   
+    print(shapes[0])
+    print(f"My area is {shapes[0].area():.2f} cm-square and my perimeter is {shapes[0].perimeter():.2f} cm")
+    print(shapes[1])
+    print(f"My area is {shapes[1].area():.2f} cm-square and my perimeter is {shapes[1].perimeter():.2f} cm")    
+    print(shapes[2])
+    print(f"My area is {shapes[2].area():.2f} cm-square and my perimeter is {shapes[2].perimeter():.2f} cm")    
+
 
 if __name__ == '__main__':
     main()
