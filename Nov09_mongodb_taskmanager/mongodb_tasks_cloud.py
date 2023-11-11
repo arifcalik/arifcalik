@@ -6,7 +6,7 @@ from bson import ObjectId
 
 pp = pprint.PrettyPrinter(indent=4)
 
-def setup(database_name, collection_name):   
+def setup(database_name, collection_name):
     print("Enter your Atlas MongoDB pass: ")
     passw = getpass()
 
@@ -20,16 +20,16 @@ def setup(database_name, collection_name):
         print(e)
 
     mydatabase = myclient[database_name]
-    mycollection = mydatabase[collection_name]        
+    mycollection = mydatabase[collection_name]
     dblist = myclient.list_database_names()
     if database_name in dblist:
         print(f"The database({database_name}) exists.")
     else:
-        print(f"The database({database_name}) does NOT exist.") 
+        print(f"The database({database_name}) does NOT exist.")
 
     return mycollection
 
-def add_task(mycollection, title, description, status="To Do"): 
+def add_task(mycollection, title, description, status="To Do"):
     print("Adding a task into my mongo dbase")
     mytask = { "title": title, "description": description, "status" : status }
     # check there is totally same document
@@ -54,7 +54,7 @@ def list_tasks(mycollection):
         pp.pprint(task)
     pp.pprint("--------------------------")
 
-def update_task_status(mycollection, task_id, new_status): 
+def update_task_status(mycollection, task_id, new_status):
     print("Updating the task in my mongo dbase")
     toBeUpdated = { "_id": ObjectId(task_id) }
     newvalues = { "$set" : { "status" : new_status } }
@@ -68,12 +68,12 @@ def delete_task(mycollection, task_id):
         result = mycollection.delete_one(toBeDeleted)
     except pymongo.errors.OperationFailure:
         print("Aauthentication error! Sure your database user is authorized for writing?")
-        sys.exit(1)   
-    else:          
+        sys.exit(1)
+    else:
         print("Deletion Summary: %x documents deleted." %(result.deleted_count))
-    return result.deleted_count    
+    return result.deleted_count
     
-def main(): 
+def main():
     collection = setup("taskmanager", "tasks")
     title = "Pay the el. invoice" 
     description = "Ellevio invoice, last payment date: Friday"
