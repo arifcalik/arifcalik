@@ -141,11 +141,11 @@ def intro(users_col, posts_col):
     # choice = input("Do you want to register(r) or login(l) or quit(q) : ")
     logged_in = False
     empty_user = {}  # {"username": username, "password": password, "email": email, "followers": [], "following": []}
-    no_database_yet = users_col.count_documents(empty_user)
+    database_up_and_running = users_col.count_documents(empty_user)
     while True:
         if logged_in:
             choice = input("Do you want to (q)uit (p)ost (f)ollow like(heart) (u)nfollow or (v)iew: ")
-        elif not no_database_yet:
+        elif not database_up_and_running:
             choice = input("Do you want to (r)egister or (q)uit:: ")
         elif not logged_in:
             choice = input("Do you want to (r)egister, (l)ogin or (q)uit:: ")
@@ -154,22 +154,22 @@ def intro(users_col, posts_col):
             case 'r':
                 logged_in = register(users_col)
             case 'l':
-                if no_database_yet and not logged_in:
+                if database_up_and_running and not logged_in:
                     logged_in = login(users_col)
             case 'f':
-                if no_database_yet and logged_in:
+                if database_up_and_running and logged_in:
                     follow(users_col)
             case 'u':
-                if no_database_yet and logged_in:
+                if database_up_and_running and logged_in:
                     unfollow(users_col)
             case 'h':
-                if no_database_yet and logged_in:
+                if database_up_and_running and logged_in:
                     like(posts_col)
             case 'v':
-                if no_database_yet and logged_in:
+                if database_up_and_running and logged_in:
                     view(posts_col)
             case 'p':
-                if no_database_yet and logged_in:
+                if database_up_and_running and logged_in:
                     post(posts_col)
             case 'q':
                 quit()
