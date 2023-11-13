@@ -109,17 +109,20 @@ def unfollow(users_col, active_user):
                 users_col.update_one({"username": unfollow_user}, {"$pull": {"followers": active_user}})
 
 
-def view(posts_col):
+def view(users_col, posts_col, active_user):
     # TODO : only view the followings posts not all posts!
-    print("Listing all post in my mongo posts collection:") 
+    print("Listing all posts of my followings and mines :")
+    following = users_col.find_one({"username": active_user})["following"]
     for _post in posts_col.find():
-        pp.pprint("--------------------------")
-        pp.pprint(_post)
-        pp.pprint("--------------------------")
-        post_id = _post["_id"]
-        to_be_updated = {"_id": ObjectId(post_id)}
-        new_values = {"$inc": {"view": 1}}
-        posts_col.update_one(to_be_updated, new_values)
+        if _post["owner"] in following or _post["owner"] == active_user:
+            pp.pprint("--------------------------")
+            pp.pprint(_post)
+            pp.pprint("--------------------------")
+            post_id = _post["_id"]
+            if _post["owner"] != active_user:
+                to_be_updated = {"_id": ObjectId(post_id)}
+                new_values = {"$inc": {"view": 1}}
+                posts_col.update_one(to_be_updated, new_values)
 
 
 def like(posts_col):
@@ -135,13 +138,13 @@ def quit_app():
     exit()
 
 
-def post(posts_col):
+def post(posts_col, active_user):
     datetime_now = datetime.utcnow()  
 
     # TODO : $currentDate
     title = input("Enter the title here for the post::")
     content = input("Enter the text for the posts body::")
-    post_info = {"title": title, "content": content, "like": 0, "view": 0, "date": datetime_now}
+    post_info = {"owner": active_user, "title": title, "content": content, "like": 0, "view": 0, "date": datetime_now}
     result = posts_col.insert_one(post_info)
     pp.pprint(result.inserted_id)
     pp.pprint("")
@@ -180,10 +183,10 @@ def intro(users_col, posts_col, active_user):
                     like(posts_col)
             case 'v':
                 if database_up_and_running and logged_in:
-                    view(posts_col)
+                    view(users_col, posts_col, active_user)
             case 'p':
                 if database_up_and_running and logged_in:
-                    post(posts_col)
+                    post(posts_col, active_user)
             case 'q':
                 quit_app()
               
