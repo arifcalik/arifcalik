@@ -26,6 +26,7 @@ def setup(database_name, collection_names):
         print(f"The database({database_name}) does NOT exist.")
     return users_collection, posts_collection
 
+
 def login(users_col, active_user):
     correct_user_info = False
     while not correct_user_info:
@@ -34,26 +35,26 @@ def login(users_col, active_user):
         # security
         # username = getpass()
         password = input("enter your password ::")
-        user_info = {"username": username, "password": password}
 
-        for user_info in users_col.find():
-            if user_info["username"] == username and user_info["password"] == password:
+        for doc in users_col.find():
+            if doc["username"] == username and doc["password"] == password:
                 pp.pprint("Successfully you logged in.")
                 correct_user_info = True
                 active_user = username
                 break
         else:
-            pp.pprint("")
+            pp.pprint("Incorrect username or password!")
         return correct_user_info, active_user
 
 
-def register(users_col, active_user):
+def register(users_col):
     pp.pprint("Welcome for registration, good choice")
 
     correct_email_format = False
+    email = None
     while not correct_email_format:
         email = input("valid email address ::")
-        regex_expression = "[^@]+@[^@]+\.[^@]+"
+        regex_expression = r"[^@]+@[^@]+\.[^@]+"
         correct_email_format = re.match(regex_expression, email)
         if email.lower() == "q":
             exit()
@@ -70,9 +71,8 @@ def register(users_col, active_user):
     user_info = {"username": username, "password": password, "email": email, "followers": [], "following": []}
     result = users_col.insert_one(user_info)
     pp.pprint(result.inserted_id)
-    active_user = username
 
-    return True, active_user
+    return True, username
 
 
 def follow(users_col, active_user):
@@ -119,7 +119,7 @@ def view(posts_col):
         post_id = _post["_id"]
         to_be_updated = {"_id": ObjectId(post_id)}
         new_values = {"$inc": {"view": 1}}
-        result = posts_col.update_one(to_be_updated, new_values)
+        posts_col.update_one(to_be_updated, new_values)
 
 
 def like(posts_col):
@@ -127,7 +127,7 @@ def like(posts_col):
     print("Updating the post likes in my mongo dbase")
     to_be_updated = {"_id": ObjectId(post_id)}
     new_values = {"$inc": {"like": 1}}
-    result = posts_col.update_one(to_be_updated, new_values)
+    posts_col.update_one(to_be_updated, new_values)
     return
 
 
@@ -152,7 +152,7 @@ def intro(users_col, posts_col, active_user):
     # choice = input("Do you want to register(r) or login(l) or quit(q) : ")
     logged_in = False
     empty_user = {}
-    database_up_and_running = users_col.count_documents(empty_user)     # {} could be directly inside call instead empty_user
+    database_up_and_running = users_col.count_documents(empty_user)  # {}could be directly in call instead empty_user
     while True:
         if logged_in:
             choice = input("Do you want to (q)uit (p)ost (f)ollow like(heart) (u)nfollow or (v)iew: ")
@@ -160,10 +160,12 @@ def intro(users_col, posts_col, active_user):
             choice = input("Do you want to (r)egister or (q)uit:: ")
         elif not logged_in:
             choice = input("Do you want to (r)egister, (l)ogin or (q)uit:: ")
+        else:
+            choice = None
 
         match choice:
             case 'r':
-                logged_in, active_user = register(users_col, active_user)
+                logged_in, active_user = register(users_col)
             case 'l':
                 if database_up_and_running and not logged_in:
                     logged_in, active_user = login(users_col, active_user)
