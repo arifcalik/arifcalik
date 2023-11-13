@@ -26,12 +26,7 @@ def setup(database_name, collection_names):
         print(f"The database({database_name}) does NOT exist.")
     return users_collection, posts_collection
 
-
-# TODO : remove global thing
-active_user = None
-
-
-def login(users_col):
+def login(users_col, active_user):
     correct_user_info = False
     while not correct_user_info:
         pp.pprint("Provide your username and password")
@@ -45,16 +40,14 @@ def login(users_col):
             if user_info["username"] == username and user_info["password"] == password:
                 pp.pprint("Successfully you logged in.")
                 correct_user_info = True
-                # active_user = user_info["username"]
-                global active_user
                 active_user = username
                 break
         else:
             pp.pprint("")
-        return correct_user_info
+        return correct_user_info, active_user
 
 
-def register(users_col):
+def register(users_col, active_user):
     pp.pprint("Welcome for registration, good choice")
 
     correct_email_format = False
@@ -77,25 +70,43 @@ def register(users_col):
     user_info = {"username": username, "password": password, "email": email, "followers": [], "following": []}
     result = users_col.insert_one(user_info)
     pp.pprint(result.inserted_id)
-    return True
+    active_user = username
+
+    return True, active_user
 
 
-def follow(users_col):
+def follow(users_col, active_user):
     follow_user = input("Who do you want to follow:: ")
-    result = users_col.find({"username": follow_user})
-    if not result:
+    follow_user_doc = users_col.find_one({"username": follow_user})
+    if not follow_user_doc:
         pp.pprint("No such user in the users collection!!!")
     else:
         pp.pprint("There is such a user and you can sure follow!")
-    users_col.update_one({"username": active_user}, {"$push": {"following": follow_user}})
-    users_col.update_one({"username": follow_user}, {"$push": {"followers": active_user}})
+        active_user_doc = users_col.find_one({"username": active_user})
+        if active_user_doc:
+            if not active_user_doc["following"]:    # empty list
+                users_col.update_one({"username": active_user}, {"$push": {"following": follow_user}})
+            else:
+                users_col.update_one({"username": active_user}, {"$addToSet": {"following": follow_user}})
+
+            if not follow_user_doc["followers"]:    # empty list
+                users_col.update_one({"username": follow_user}, {"$push": {"followers": active_user}})
+            else:
+                users_col.update_one({"username": follow_user}, {"$addToSet": {"followers": active_user}})
 
 
-def unfollow(users_col):
-    unfollow_who = input("Who do you want to unfollow:: ")
-    result = users_col.find({"username": unfollow_who})
-    users_col.update_one({"username": active_user}, {"$pull": {"following": unfollow_who}})
-    users_col.update_one({"username": unfollow_who}, {"$pull": {"followers": active_user}})
+def unfollow(users_col, active_user):
+    unfollow_user = input("Who do you want to unfollow:: ")
+    unfollow_user_doc = users_col.find_one({"username": unfollow_user})
+    if not unfollow_user_doc:
+        pp.pprint("No such user in the users collection!!!")
+    else:
+        pp.pprint("There is such a user and you can sure unfollow!")
+        active_user_doc = users_col.find_one({"username": active_user})
+        if active_user_doc:
+            if unfollow_user in active_user_doc["following"]:    # in the list
+                users_col.update_one({"username": active_user}, {"$pull": {"following": unfollow_user}})
+                users_col.update_one({"username": unfollow_user}, {"$pull": {"followers": active_user}})
 
 
 def view(posts_col):
@@ -120,7 +131,7 @@ def like(posts_col):
     return
 
 
-def quit():
+def quit_app():
     exit()
 
 
@@ -136,12 +147,12 @@ def post(posts_col):
     pp.pprint("")
 
 
-def intro(users_col, posts_col):
+def intro(users_col, posts_col, active_user):
     pp.pprint("Welcome to Facelook")
     # choice = input("Do you want to register(r) or login(l) or quit(q) : ")
     logged_in = False
-    empty_user = {}  # {"username": username, "password": password, "email": email, "followers": [], "following": []}
-    database_up_and_running = users_col.count_documents(empty_user)
+    empty_user = {}
+    database_up_and_running = users_col.count_documents(empty_user)     # {} could be directly inside call instead empty_user
     while True:
         if logged_in:
             choice = input("Do you want to (q)uit (p)ost (f)ollow like(heart) (u)nfollow or (v)iew: ")
@@ -152,16 +163,16 @@ def intro(users_col, posts_col):
 
         match choice:
             case 'r':
-                logged_in = register(users_col)
+                logged_in, active_user = register(users_col, active_user)
             case 'l':
                 if database_up_and_running and not logged_in:
-                    logged_in = login(users_col)
+                    logged_in, active_user = login(users_col, active_user)
             case 'f':
                 if database_up_and_running and logged_in:
-                    follow(users_col)
+                    follow(users_col, active_user)
             case 'u':
                 if database_up_and_running and logged_in:
-                    unfollow(users_col)
+                    unfollow(users_col, active_user)
             case 'h':
                 if database_up_and_running and logged_in:
                     like(posts_col)
@@ -172,15 +183,16 @@ def intro(users_col, posts_col):
                 if database_up_and_running and logged_in:
                     post(posts_col)
             case 'q':
-                quit()
+                quit_app()
               
             case _:
                 print("Something's wrong with your choice!")
 
 
 def main():
+    active_user = None
     users_collection, posts_collection = setup("social_media", ["users", "posts"])
-    intro(users_collection, posts_collection)
+    intro(users_collection, posts_collection, active_user)
 
 
 if __name__ == "__main__":
