@@ -126,7 +126,17 @@ def view(users_col, posts_col, active_user):
 
 
 def like(posts_col):
-    post_id = input("Enter the post id you want to LIKE:: ")
+    # TODO try catch here for postids which are not 24 hexchars long!
+    # use regex for validity of hexchars
+    correct_postid_format = False
+    while not correct_postid_format:
+        post_id = input("Enter the post id you want to LIKE:: ")
+        regex_expression = r"[a-fA-F0-9]{24}"
+        correct_postid_format = re.match(regex_expression, post_id)
+        if correct_postid_format:
+            break
+        print("Post id must be 24 hex chars long exactly!")
+
     print("Updating the post likes in my mongo dbase")
     to_be_updated = {"_id": ObjectId(post_id)}
     new_values = {"$inc": {"like": 1}}
@@ -154,11 +164,13 @@ def intro(users_col, posts_col, active_user):
     pp.pprint("Welcome to Facelook")
     # choice = input("Do you want to register(r) or login(l) or quit(q) : ")
     logged_in = False
-    empty_user = {}
-    database_up_and_running = users_col.count_documents(empty_user)  # {}could be directly in call instead empty_user
     while True:
-        if logged_in:
+        empty_user = {}
+        database_up_and_running = users_col.count_documents(empty_user)  # {}could be directly in call instead empty_user
+        if logged_in and database_up_and_running > 1:
             choice = input("Do you want to (q)uit (p)ost (f)ollow like(heart) (u)nfollow or (v)iew: ")
+        elif logged_in and database_up_and_running == 1:
+            choice = input("Do you want to (q)uit (p)ost or (v)iew: ")
         elif not database_up_and_running:
             choice = input("Do you want to (r)egister or (q)uit:: ")
         elif not logged_in:
@@ -173,7 +185,7 @@ def intro(users_col, posts_col, active_user):
                 if database_up_and_running and not logged_in:
                     logged_in, active_user = login(users_col, active_user)
             case 'f':
-                if database_up_and_running and logged_in:
+                if database_up_and_running > 1 and logged_in:
                     follow(users_col, active_user)
             case 'u':
                 if database_up_and_running and logged_in:
