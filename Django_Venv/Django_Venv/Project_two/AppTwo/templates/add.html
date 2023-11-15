@@ -1,0 +1,17 @@
+<h1>Contact info</h1>
+
+<form action="addrecord/" method="post">
+{% csrf_token %}
+    First Name:<br>
+    <input name="first">
+    <br><br>
+    Last Name:<br>
+    <input name="last">
+    <br><br>
+    E-mail:<br>
+    <input name="email" type="text" 
+    pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" 
+    placeholder="Email address" required>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>

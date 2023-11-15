@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <!-- Later replace those style things with bootstrap things-->
+    <style>
+      table, th, tr, td {
+        background-color: rgb(142, 187, 193);
+        border: 2px solid rgb(3, 28, 31);
+        padding: 10px;
+        border-collapse: collapse;
+        margin-left: 30px;
+      }
+      th, ol{
+        padding: 10px;
+        font-size: 25px;
+        margin-left: 30px;
+      }
+      td , ol{
+        border-radius: 50px;
+      }
+    </style>
+  </head>
+
+<body>
+
+<h1 style="margin-left: 140px;">Bookings</h1>
+ 
+<table>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Email</th>
+  </tr>
+  {% for person in customers %}
+    <tr>
+      <td>{{ person.first_name }}</td>
+      <td>{{ person.last_name }}</td>
+      <td>{{ person.email }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+
+</body>
+</html>
