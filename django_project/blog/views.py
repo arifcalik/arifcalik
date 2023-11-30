@@ -19,7 +19,7 @@ class SearchResultsView(ListView):
     template_name = 'blog/search_results.html'
     context_object_name = 'posts'
     ordering = ['-date_posted']
-    paginate_by = 5
+    paginate_by = 6
 
     def get_queryset(self): 
         query = self.request.GET.get("q")
