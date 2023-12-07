@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}
+    {% endblock title %}
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+      {% include 'basePage/base.html' %}
+      <main role="main" class="container">
+      <div class="row">
+          <div class="col-md-12">
+          <br><br><br>
+          {% if messages %}
+              <hr>
+              {% for msg in messages %}
+                  <div class='alert alert{{ msg.tags}}'>
+                      {{ msg }}
+                  </div>
+              {% endfor %}
+              <hr>
+          {% endif %}
+          {% block content %}{% endblock %}
+          </div>
+      </div>
+      </main>
+
+      {% block script %}
+      {% endblock script %}
+
+      {% include 'basePage/footer.html' %}
+      
+
+  </body>
+  </html>

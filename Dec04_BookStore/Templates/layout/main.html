@@ -1,0 +1,94 @@
+{% extends 'layout/index.html' %}
+{% block title %}
+    Main | Books Web Shopping
+{% endblock title %}
+{% block content %}
+<div class="container" style = "margin-top:70px;">
+
+<div class="container">
+<form method="get" class="mb-3">
+<div class="row">
+<div class="col-md-3">
+        <label for="category"></label>
+        <select name="category" id="category" class="form-control">
+            <option value="" {% if not selected_category %}selected{% endif %}>All Categories</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if category.id == selected_category %}selected{% endif %}>{{ category.category_name }}</option>
+            {% endfor %}
+        </select>
+</div>
+<div class="col-md-3">
+        <button type="submit" class="btn btn-warning mt-4">Apply Filter</button>
+</div>
+<div class="col-md-6"></div>
+</div>
+    </form>
+
+</div>
+
+
+    <div class="container mt-2">
+
+
+    <div class="row">
+        {% for book in books %}
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                {% if book.image %}
+                    <a href="{% url 'book_detail' book_id=book.id %}">
+                    <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.title }}">
+                    </a>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title"><strong><a href="{% url 'book_detail' book_id=book.id %} " class="text-reset text-decoration-none">{{ book.title }}</a></strong></h5>
+
+                    <p class="card-text">Category:<strong> {{ book.category_id.category_name }}</strong></p>
+                    <p class="card-text">Author:<strong> {{ book.author }}</strong></p>
+                    <p class="card-text">Publisher:<strong> {{ book.publisher }}</strong></p>
+                    <p class="card-text">Price:<strong> SEK {{ book.price }}</strong></p>
+                    <button type="button" class="btn btn-warning">Add to cart</button>
+
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+</div>
+
+
+
+<nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if books.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" tabindex="-1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+            {% if books %}
+                <li class="page-item disabled">
+                        <span class="page-link">Page {{ books.number }} of {{ books.paginator.num_pages }}</span>
+                </li>
+            {% else %}
+                <p>Unfortunately nothing here!</p>
+            {% endif %}
+            {% if books.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.paginator.num_pages }}">Last</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+
+{% endblock content %}
