@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from markupsafe import escape
 
 
 app = Flask(__name__)
@@ -36,7 +37,7 @@ def index():
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    task_to_delete = Todo.query.get_or_404(id)
+    task_to_delete = Todo.query.get_or_404(escape(id))
 
     try:
         db.session.delete(task_to_delete)
@@ -48,7 +49,7 @@ def delete(id):
 
 @app.route('/update/<int:id>', methods=['POST', 'GET'])
 def update(id):
-    task_to_update = Todo.query.get_or_404(id)
+    task_to_update = Todo.query.get_or_404(escape(id))
 
     if request.method == 'POST':
         task_to_update.content = request.form['content']
@@ -61,7 +62,17 @@ def update(id):
 
     else:
         return render_template('update.html', task=task_to_update)
-    
+
+# simple get api!
+@app.route("/first_task")
+def tasks_api():
+    task = Todo.query.order_by(Todo.date_created).first_or_404()
+    return {"id":task.id, "content":task.content, "creation date":task.date_created}
+
 
 if __name__ == "__main__":
+    with app.test_request_context():
+        print(url_for('index'))
+        print(url_for('delete', id=1))
+        print(url_for('update', id=3))
     app.run(debug=True, port=8000)
